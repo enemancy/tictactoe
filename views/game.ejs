@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="/css/style.css" rel="stylesheet">
+    <title>〇×ゲーム</title>
+</head>
+<body>
+    <%- include('header'); %>
+
+    <h1>マスをクリックしてください</h1>
+    <p id="player">1Pの番です</p>
+    <div class="game-field">
+        <% for(i=0;i<9;i++){ %>
+            <div class="box blank"></div>
+        <% }; %>
+    </div>
+
+    <a href="/game" class="btn btn--orange">リセット</a>
+
+    <script type="module" src="/javascript/game.js"></script>
+
+    <%- include('footer'); %>
+</body>
+</html>
