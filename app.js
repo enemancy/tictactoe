@@ -14,6 +14,9 @@ const connection = mysql.createConnection({
     database:'tictactoe'
 })
 
+//フォームの値を受け取る
+app.use(express.urlencoded({extended:false}));
+
 // ミドルウェア
 app.use(express.static('public'));
 
@@ -34,6 +37,38 @@ app.get('/user',(req,res)=>{
         }
     );
 });
+
+app.get('/user/adduser',(req,res)=>{
+    res.render('adduser.ejs');
+});
+
+app.post('/adduser',(req,res)=>{
+    connection.query(
+        'insert into users(name,color) values(?,?)',
+        [req.body.userName,req.body.userColor],
+        (error,results)=>{
+            res.redirect('/user');
+
+            // 以下コードにするとリロードでinsertされる
+            // connection.query(
+            //     'select * from users',
+            //     (error,results) =>{
+            //         res.render('user.ejs',{users:results});
+            //     }
+            // );
+        }
+    );
+});
+
+app.post('/deleteuser/:id',(req,res)=>{
+    connection.query(
+        'delete from users where id=?',
+        [req.params.id],
+        (error,results)=>{
+            res.redirect('/user');
+        }
+    )
+})
 
 // surver
 app.listen(PORT,()=>{

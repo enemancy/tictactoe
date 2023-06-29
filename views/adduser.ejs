@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="/css/style.css" rel="stylesheet">
+    <title>〇×ゲーム</title>
+</head>
+<body>
+    <%- include('header'); %>
+
+    <form action="/adduser" method="post">
+        名前:<input type="text" name="userName">
+        <br>
+        色:<select name="userColor">
+            <option>blue</option>
+            <option>pink</option>
+        </select>
+        <br>
+        <input type="submit">
+    </form>
+
+    <%- include('footer'); %>
+</body>
+</html>

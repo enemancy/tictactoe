@@ -8,11 +8,17 @@
 </head>
 <body>
     <%- include('header'); %>
-    <ul class="user">
+
+    <a href="/user/adduser" class="btn btn--orange">追加</a>
+
+    <ul class="users">
         <% users.forEach((user) =>{ %>
             <li>
                 <h2><%= user.name %></h2>
                 <p><%= user.color %></p>
+                <form action="/deleteuser/<%= user.id %>" method="post">
+                    <input type="submit" value="削除">
+                </form>
             </li>
         <% }) %>
     </ul>
