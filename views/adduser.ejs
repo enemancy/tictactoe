@@ -10,14 +10,24 @@
     <%- include('header'); %>
 
     <form action="/adduser" method="post">
-        名前:<input type="text" name="userName">
-        <br>
-        色:<select name="userColor">
-            <option>blue</option>
-            <option>pink</option>
-        </select>
-        <br>
-        <input type="submit">
+        <div class="form-container">
+            <p class="form-heading">名前</p>
+            <input type="text" name="userName" class="input-text">
+            <br>
+        </div>
+        <div class="form-container">
+            <p class="form-heading">色</p>
+            <label for="" class="selectbox">
+                <select name="userColor">
+                <% for(i=0;i<colors.length;i++){ %>
+                    <option><%= colors[i].color %></option>
+                <% } %>
+                </select>
+            </label>
+            <br>
+        </div>
+        
+        <input type="submit" value="登録" class="inputbtn">
     </form>
 
     <%- include('footer'); %>

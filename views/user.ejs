@@ -9,19 +9,28 @@
 <body>
     <%- include('header'); %>
 
-    <a href="/user/adduser" class="btn btn--orange">追加</a>
+    <h1>ユーザー一覧</h1>
 
-    <ul class="users">
+    <table>
+        <tr>
+            <th>名前</th>
+            <th>色</th>
+            <th>削除</th>
+        </tr>
         <% users.forEach((user) =>{ %>
-            <li>
-                <h2><%= user.name %></h2>
-                <p><%= user.color %></p>
-                <form action="/deleteuser/<%= user.id %>" method="post">
-                    <input type="submit" value="削除">
-                </form>
-            </li>
+            <tr>
+                <td><%= user.name %></td>
+                <td><%= user.color %></td>
+                <td>
+                    <form action="/deleteuser/<%= user.id %>" method="post">
+                        <input type="submit" value="-" class="inputbtn">
+                    </form>
+                </td>
+            </tr>
         <% }) %>
-    </ul>
+    </table>
+
+    <a href="/user/adduser" class="inputbtn">追加</a>
 
     <%- include('footer'); %>
 </body>

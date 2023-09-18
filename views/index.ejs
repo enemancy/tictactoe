@@ -9,9 +9,18 @@
 <body>
     <%- include('header'); %>
 
-    <h1>〇×ゲームへようこそ</h1>
-    <a href="/game" class="btn btn--orange">はじめる</a>
-    <a href="/user" class="btn btn--orange">ユーザー選択</a>
+    <h1 class="heading">〇×ゲームへようこそ</h1>
+    <form action="/selectuser/1" method="post">
+        <input type="submit" value="1人で始める" class="reset inputbtn">
+    </form> 
+    <form action="/selectuser/2" method="post">
+        <input type="submit" value="2人で始める" class="reset inputbtn">
+    </form> 
+    <a href="/user" class="reset inputbtn">ユーザー一覧</a>
+
+    <!-- <form action="/testcode" method="post">
+        <input type="submit" value="testcode">
+    </form> -->
 
     <%- include('footer'); %>
 </body>

@@ -1,16 +1,48 @@
 /* all */
-
+body{
+  justify-content: center;
+  align-items: center;
+  text-align:center;
+}
 
 /* header */
 header {
-    background-color: rgb(54, 145, 95);
+    background-color: #ff9300;
+    display: flex;
+}
+.header-text{
+  color: #fff;
+  font-weight: bold;
+  text-align: left;
+}
+
+/* 見出し */
+.heading{
+  display: inline-block;
+  position: relative;
+  color: #333;
+}
+.heading:before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 4px;
+  background-color: #ff9300;
 }
 
 /* game */
+.game{
+  display: flex;
+  justify-content: center;
+}
 .game-field{
     display:grid;
-    grid-template-rows:200px 200px 200px;
-    grid-template-columns:200px 200px 200px;
+    grid-template-rows:120px 120px 120px;
+    grid-template-columns:120px 120px 120px;
 }
 .box {
     font-size: 50px;
@@ -23,39 +55,232 @@ header {
     border-radius: 15%;
     margin:5px;
 }
-.blue{
+
+
+
+
+.box-blue{
     background-color: blue;
 }
-.pink{
+.box-pink{
     background-color: pink;
 }
+.box-yellow{
+  background-color: yellow;
+}
+.box-green{
+  background-color: green;
+}
+.box-black{
+  background-color: black;
+}
+.box-orange{
+  background-color: orange;
+}
+
 /* ボタン */
-.btn{
-  font-size: 1.6rem;
-  font-weight: 700;
-  line-height: 1.5;
-  position: relative;
-  display: inline-block;
-  padding: 1rem 4rem;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-  text-align: center;
-  vertical-align: middle;
+a{
   text-decoration: none;
-  letter-spacing: 0.1em;
-  color: #212529;
-  border-radius: 0.5rem;
 }
-a.btn--orange {
+.inputbtn {
+  position: relative;
+  text-align: center;
+  /* 中央揃え */
+  display: block;
+  margin: 0 auto;
+  /* 幅の指定 */
+  width: 100%;
+  max-width: 120px;
+  box-sizing: border-box;
+  padding: 10px;
+  /* 色の指定 */
+  background: linear-gradient(135deg, #ffd900, #ff9300);
   color: #fff;
-  background-color: #eb6100;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: 0.3s;
+  border: 2px solid #ff9300;
+  background: #fff;
+  color: #ff9300;
 }
-a.btn--orange:hover {
+.inputbtn:hover {
+  background: #ff9300;
   color: #fff;
-  background: #f56500;
+}
+.inputbtn:active, .inputbtn:focus {
+  top: 2px;
+}
+
+/* フォーム見出し */
+.form-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.form-heading{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #fff;
+  background-color: #ff9300;
+  height: 2.8em;
+  width:4.5em;
+  position: relative;
+  border-radius: 3PX 0 0 3px;
+}
+
+/* インプットテキスト */
+.input-text{
+  appearance: none;
+  min-width: 100px;
+  height: 2em;
+  padding: .4em 3.6em .4em .8em;
+  border: none;
+  border-radius: 3px;
+  background-color: #e6edf3;
+  color: #333;
+  font-size: 1em;
+  cursor: pointer;
+}
+.input-text input[type="text"]:focus {
+  outline: 2px solid #ff9300;
+}
+
+/* セレクトボックス */
+.selectbox {
+  position: relative;
+}
+
+.selectbox::before,
+.selectbox::after {
+  position: absolute;
+  content: '';
+  pointer-events: none;
+}
+
+.selectbox::before {
+  display: inline-block;
+  right: 0;
+  width: 2.8em;
+  height: 2.8em;
+  border-radius: 0 3px 3px 0;
+  background-color: #ff9300;
+}
+
+.selectbox::after {
+  position: absolute;
+  top: 50%;
+  right: 1.4em;
+  transform: translate(50%, -50%) rotate(45deg);
+  width: 6px;
+  height: 6px;
+  border-bottom: 3px solid #fff;
+  border-right: 3px solid #fff;
+}
+
+.selectbox select {
+  appearance: none;
+  min-width: 230px;
+  height: 2.8em;
+  padding: .4em 3.6em .4em .8em;
+  border: none;
+  border-radius: 3px;
+  background-color: #e6edf3;
+  color: #333;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.selectbox select:focus {
+  outline: 2px solid #ff9300;
+}
+
+/* テーブル */
+table{
+  width: 100%;
+  border-collapse:separate;
+  border-spacing: 0;
+}
+
+table th:first-child{
+  border-radius: 5px 0 0 0;
+}
+
+table th:last-child{
+  border-radius: 0 5px 0 0;
+  border-right: 1px solid #ff9300;
+}
+
+table th{
+  text-align: center;
+  color:white;
+  background: #ff9300;
+  border-left: 1px solid #ff9300;
+  border-top: 1px solid #ff9300;
+  border-bottom: 1px solid #ff9300;
+  box-shadow: 0px 1px 1px rgba(255,255,255,0.3) inset;
+  width: 25%;
+  padding: 10px 0;
+}
+
+table td{
+  text-align: center;
+  border-left: 1px solid #a8b7c5;
+  border-bottom: 1px solid #a8b7c5;
+  border-top:none;
+  box-shadow: 0px -3px 5px 1px #eee inset;
+  width: 25%;
+  padding: 10px 0;
+}
+
+table td:last-child{
+  border-right: 1px solid #a8b7c5;
+}
+
+table tr:last-child td:first-child {
+  border-radius: 0 0 0 5px;
+}
+
+table tr:last-child td:last-child {
+  border-radius: 0 0 5px 0;
+}
+
+/* フッター */
+.footer-002 {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 25px 10px 10px;
+  background-color: #ff9300;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+.footer-002__logo {
+  width: 130px;
+  height: 30px;
+}
+
+.footer-002__list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0 1.5em;
+  list-style-type: none;
+  margin: 0 0 .5em;
+  padding: .5em;
+}
+
+.footer-002__sns-icon {
+  width: 21px;
+  height: 21px;
+}
+
+.footer-002__copyright {
+  margin: 0;
+  color: #ffffffb3;
+  font-weight: 200;
+  font-size: .8em;
 }

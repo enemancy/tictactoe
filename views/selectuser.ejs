@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="/css/style.css" rel="stylesheet">
+    <title>〇×ゲーム</title>
+</head>
+<body>
+    <%- include('header'); %>
+
+    <form action="/game/<%= playerCnt %>" method="post">
+        <% for(i=0;i<playerCnt;i++){ %>
+            <% let text = '' %>
+                <% if(playerCnt > 0){ %>
+                    <% switch (i) {
+                        case 0 :
+                            text = '先行'
+                            break;
+                        case 1 :
+                            text = '後攻'
+                            break;
+                        default:
+                            break;
+                        } %> 
+                <% } %>
+            <div class="form-container">
+                <br>
+                <p class="form-heading"><%= text %></p>
+                <label class="selectbox">
+                    <select name="player<%= i+1 %>">
+                        <% users.forEach((user)=>{ %>
+                            <option><%= user.name %></option>
+                        <% }); %>
+                    </select>
+                </label>
+            </div>
+        <% } %>
+        <input type="submit" value="スタート" class="rest inputbtn">
+    </form>
+
+
+    <%- include('footer'); %>
+</body>
+</html>

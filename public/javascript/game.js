@@ -3,11 +3,12 @@ let cnt = 0;
 let gameBoxes = document.querySelectorAll('.box');
 let playerEl = document.getElementById('player');
 let h1El= document.getElementsByTagName('h1')[0];
+let getPlayersElements = document.getElementsByClassName('getPlayers');
 
 //player設定
 import Player from './player.js';
-const player1 = new Player("1","Player1","blue","〇",false);
-const player2 = new Player("2","Player2","pink","×",true);
+const player1 = new Player("1",getPlayersElements[0].innerText,getPlayersElements[2].innerText,"〇");
+const player2 = new Player("2",getPlayersElements[1].innerText,getPlayersElements[3].innerText,"×");
 
 //playerの初期設定
 let nowPlayer = player1;
@@ -21,7 +22,6 @@ let playerClick = ()=>{
             let checkClicked = player1.checkClicked(gameBoxes[i]) || player2.checkClicked(gameBoxes[i]);
             //空白クリック時
             if(checkClicked == false && winFlg == false){
-                cnt++;
                 console.log(`${cnt}:${winFlg}`);
                 clickedBox(this);
             }
@@ -33,7 +33,8 @@ let playerClick = ()=>{
 //boxがクリックされたときの処理
 let clickedBox = (box) =>{
     //playerの処理
-    box.classList.add(nowPlayer.color);
+    cnt++;
+    box.classList.add(`box-${nowPlayer.color}`);
     box.classList.remove("blank");
     box.innerText = nowPlayer.text;
     //勝利判定
@@ -46,6 +47,7 @@ let clickedBox = (box) =>{
         //次のplayerの準備
         playerEl.innerHTML = `${nextPlayer.name}の番です`;
         toglePlayer();
+        console.log(player2.isCom);
         if(nowPlayer.isCom)comClick();
     }
 };
@@ -76,10 +78,11 @@ const winPatern = [
     [2, 4, 6]
 ];
 
-let checkWin = (className) =>{
+let checkWin = (color) =>{
     let checkPatern = false;
+    let boxColorClass = `box-${color}`
     for(let i=0;i<winPatern.length;i++){
-        checkPatern = gameBoxes[winPatern[i][0]].classList.contains(className) && gameBoxes[winPatern[i][1]].classList.contains(className) && gameBoxes[winPatern[i][2]].classList.contains(className);
+        checkPatern = gameBoxes[winPatern[i][0]].classList.contains(boxColorClass) && gameBoxes[winPatern[i][1]].classList.contains(boxColorClass) && gameBoxes[winPatern[i][2]].classList.contains(boxColorClass);
         if(checkPatern) return checkPatern;
     }
     return checkPatern;
@@ -87,5 +90,5 @@ let checkWin = (className) =>{
 
 //main
 
-console.log("aaa");
+console.log("game start!");
 playerClick();

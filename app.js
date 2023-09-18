@@ -8,6 +8,7 @@ const PORT = 3000;
 //mysql
 const mysql = require('mysql');
 const connection = mysql.createConnection({
+    // localhostだからデプロイしたらできない？
     host:'localhost',
     user:'root',
     password:process.env.MYSQL_PASSWORD,
@@ -20,6 +21,12 @@ app.use(express.urlencoded({extended:false}));
 // ミドルウェア
 app.use(express.static('public'));
 
+app.post('/',(req)=>{
+    console.log(req.body.usename);
+    let name = req.body.usename;
+    res.send(name);
+});
+
 // rooting
 app.get('/',(req,res)=>{
     res.render('index.ejs');
@@ -27,6 +34,38 @@ app.get('/',(req,res)=>{
 
 app.get('/game',(req,res)=>{
     res.render('game.ejs');
+});
+
+
+app.post('/game/1',(req,res)=>{
+    connection.query(
+        'select * from users where name in (?)',
+        [req.body.player1],
+        (error,results)=>{
+            results.push({name:'com',color:'pink'});
+            console.log(results);
+            //game.ejsにはplayersを渡せるけどgame.jsには渡せない。。。
+            res.render('game.ejs',{players:results});
+        }
+    );
+});
+
+
+// 先に追加された人が先行になっちゃう
+// 同じ名前だとバグる
+app.post('/game/2',(req,res)=>{
+    connection.query(
+        'select * from users where name in (?,?)',
+        [req.body.player1,req.body.player2],
+        (error,results)=>{
+            console.log(results);
+            //game.ejsにはplayersを渡せるけどgame.jsには渡せない。。。
+            if(results[0].color == results[1].color){
+                results[1].color = 'pink';
+            }
+            res.render('game.ejs',{players:results});
+        }
+    );
 });
 
 app.get('/user',(req,res)=>{
@@ -38,8 +77,28 @@ app.get('/user',(req,res)=>{
     );
 });
 
+app.post('/selectuser/:id',(req,res)=>{
+    connection.query(
+        'select * from users',
+        (error,results)=>{
+            res.render(
+                'selectuser.ejs',
+                {
+                    users:results,
+                    playerCnt:req.params.id
+                }
+            );
+        }
+    );
+});
+
 app.get('/user/adduser',(req,res)=>{
-    res.render('adduser.ejs');
+    connection.query(
+        'select color from colors',
+        (error,results)=>{
+            res.render('adduser.ejs',{colors:results});
+        }
+    )
 });
 
 app.post('/adduser',(req,res)=>{
@@ -69,6 +128,21 @@ app.post('/deleteuser/:id',(req,res)=>{
         }
     )
 })
+
+// const testQuery = 
+//     'select name,color from users where name = ?'
+
+// app.post('/testcode',(res,req)=>{
+//     connection.query(
+//         testQuery,
+//         ['yyy'],
+//         (error,results)=>{
+//             const tmp = results;
+//             tmp.push({id:100,name:'com',color:'pink'});
+//             console.log(tmp);
+//         }
+//     )
+// })
 
 // surver
 app.listen(PORT,()=>{
