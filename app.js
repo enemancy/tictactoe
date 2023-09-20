@@ -5,45 +5,34 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 
-//mysql
-const mysql = require('mysql');
-const connection = mysql.createConnection({
-    host:process.env.MYSQL_HOST,
-    user:process.env.MYSQL_USER,
-    password:process.env.MYSQL_PASSWORD,
-    database:process.env.MYSQL_DATABASE
-})
-connection.connect((err)=>{
-    if(err){
-        return console.error('MYSQL conncection error:' + err.message);
-    }
-    console.log('Connected to the MySQL server.');
-});
-
-
-// // pg
-// const {Pool} = require('pg');
-// const itemsPool = new Pool({
-//     connectionString:process.env.PG_LINK,
-//     ssl:{rejectUnauthorized:false}
-// });
-// itemsPool.connect((err)=>{
+// //mysql
+// const mysql = require('mysql');
+// const connection = mysql.createConnection({
+//     host:process.env.MYSQL_HOST,
+//     user:process.env.MYSQL_USER,
+//     password:process.env.MYSQL_PASSWORD,
+//     database:process.env.MYSQL_DATABASE
+// })
+// connection.connect((err)=>{
 //     if(err){
-//         return console.error('PostgreSQL connection error:' + err.message);
+//         return console.error('MYSQL conncection error:' + err.message);
 //     }
-//     console.log('Connected to the PostgreSQL server.');
+//     console.log('Connected to the MySQL server.');
 // });
-// itemsPool.query(
-//     "insert into users (name,color) values ($1,$2)",
-//     ['yyy','blue'],
-//     (err,res)=>{
-//         if(err){
-//             return console.log(err.message);
-//         }
-//         itemsPool.query("select * from users",(res)=>{
-//             return console.log(res);
-//         })
-//     })
+
+
+// pg
+const {Pool} = require('pg');
+const itemsPool = new Pool({
+    connectionString:process.env.PG_LINK,
+    ssl:{rejectUnauthorized:false}
+});
+itemsPool.connect((err)=>{
+    if(err){
+        return console.error('PostgreSQL connection error:' + err.message);
+    }
+    console.log('Connected to the PostgreSQL server.');
+});
 
 //フォームの値を受け取る
 app.use(express.urlencoded({extended:false}));
@@ -68,58 +57,78 @@ app.get('/game',(req,res)=>{
 
 
 app.post('/game/1',(req,res)=>{
-    connection.query(
-        'select * from users where name in (?)',
-        [req.body.player1],
-        (error,results)=>{
-            results.push({name:'com',color:'pink'});
-            console.log(results);
-            //game.ejsにはplayersを渡せるけどgame.jsには渡せない。。。
-            res.render('game.ejs',{players:results});
-        }
-    );
+    const query ={
+        text:"select * from users where name in ($1)",
+        values:[req.body.player1]
+    };
+    itemsPool
+        .query(query)
+        .then((results)=>{
+            results.rows.push({name:'com',color:'pink'});
+            console.log(results.rows);
+            res.render('game.ejs',{players:results.rows});
+        })
+        .catch((e)=>console.error(e.stack));
 });
 
 
-// 先に追加された人が先行になっちゃう
-// 同じ名前だとバグる
+// 解決：先に追加された人が先行になっちゃう
+// 同じ名前だとバグる→バグらなくなったけどバリデーション？したほうがいいかも
 app.post('/game/2',(req,res)=>{
-    connection.query(
-        'select * from users where name in (?,?)',
-        [req.body.player1,req.body.player2],
-        (error,results)=>{
-            console.log(results);
-            //game.ejsにはplayersを渡せるけどgame.jsには渡せない。。。
-            if(results[0].color == results[1].color){
-                results[1].color = 'pink';
+    const query1 = {
+        text:'select * from users where name in ($1)',
+        values:[req.body.player1]
+    };
+    let resPlayers;
+    itemsPool
+        .query(query1)
+        .then((results)=>{
+            resPlayers = results.rows;
+        })
+        .catch((e)=>console.error(e.stack));
+    
+    const query2 = {
+        text:'select * from users where name in ($1)',
+        values:[req.body.player2]
+    };
+    itemsPool
+        .query(query2)
+        .then((results)=>{
+            if(resPlayers[0].color == results.rows[0].color){
+                results.rows[0].color = 'pink';
             }
-            res.render('game.ejs',{players:results});
-        }
-    );
+            resPlayers.push(results.rows[0]);
+            res.render('game.ejs',{players:resPlayers});
+        })
+        .catch((e)=>console.error(e.stack));
 });
 
 app.get('/user',(req,res)=>{
-    connection.query(
-        'select * from users',
-        (error,results) =>{
-            res.render('user.ejs',{users:results});
-        }
-    );
+    const query = {
+        text:"select * from users",
+    }
+    itemsPool
+        .query(query)
+        .then((results)=>{
+            console.log(res.rows);
+            res.render('user.ejs',{users:results.rows});
+        })
+        .catch((e)=>console.error(e.stack));
 });
 
 app.post('/selectuser/:id',(req,res)=>{
-    connection.query(
-        'select * from users',
-        (error,results)=>{
-            res.render(
-                'selectuser.ejs',
-                {
-                    users:results,
-                    playerCnt:req.params.id
-                }
-            );
-        }
-    );
+    const query = {
+        text:"select * from users",
+    };
+    itemsPool
+        .query(query)
+        .then((results)=>{
+            res.render('selectuser.ejs',{
+                users:results.rows,
+                playerCnt:req.params.id
+            });
+        })
+        .catch((e)=>console.error(e.stack));
 });
 
 app.get('/user/adduser',(req,res)=>{
@@ -132,31 +141,29 @@ app.get('/user/adduser',(req,res)=>{
 });
 
 app.post('/adduser',(req,res)=>{
-    connection.query(
-        'insert into users(name,color) values(?,?)',
-        [req.body.userName,req.body.userColor],
-        (error,results)=>{
+    const query = {
+        text:'insert into users(name,color) values($1,$2)',
+        values:[req.body.userName,req.body.userColor]
+    };
+    itemsPool
+        .query(query)
+        .then((results)=>{
             res.redirect('/user');
-
-            // 以下コードにするとリロードでinsertされる
-            // connection.query(
-            //     'select * from users',
-            //     (error,results) =>{
-            //         res.render('user.ejs',{users:results});
-            //     }
-            // );
-        }
-    );
+        })
+        .catch((e)=>console.error(e.stack));
 });
 
 app.post('/deleteuser/:id',(req,res)=>{
-    connection.query(
-        'delete from users where id=?',
-        [req.params.id],
-        (error,results)=>{
+    const query = {
+        text:'delete from users where id=$1',
+        values:[req.params.id]
+    };
+    itemsPool
+        .query(query)
+        .then((results)=>{
             res.redirect('/user');
-        }
-    )
+        })
+        .catch((e)=>console.error(e.stack));
 })
 
 // const testQuery = 
