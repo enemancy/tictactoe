@@ -9,10 +9,10 @@ const PORT = 3000;
 const mysql = require('mysql');
 const connection = mysql.createConnection({
     // localhostだからデプロイしたらできない？
-    host:'127.0.0.1',
-    user:'root',
+    host:process.env.MYSQL_HOST,
+    user:MYSQL_USER,
     password:process.env.MYSQL_PASSWORD,
-    database:'tictactoe'
+    database:MYSQL_PASSWORD
 })
 connection.connect((err)=>{
     if(err){
