@@ -15,18 +15,35 @@ const connection = mysql.createConnection({
 })
 connection.connect((err)=>{
     if(err){
-        return console.error('error:' + err.message);
+        return console.error('MYSQL conncection error:' + err.message);
     }
     console.log('Connected to the MySQL server.');
 });
 
 
-// pg
-const {Pool} = require('pg');
-const itemsPool = new Pool({
-    connectionString:process.env.PG_LINK,
-    ssl:{rejectUnauthorized:false}
-});
+// // pg
+// const {Pool} = require('pg');
+// const itemsPool = new Pool({
+//     connectionString:process.env.PG_LINK,
+//     ssl:{rejectUnauthorized:false}
+// });
+// itemsPool.connect((err)=>{
+//     if(err){
+//         return console.error('PostgreSQL connection error:' + err.message);
+//     }
+//     console.log('Connected to the PostgreSQL server.');
+// });
+// itemsPool.query(
+//     "insert into users (name,color) values ($1,$2)",
+//     ['yyy','blue'],
+//     (err,res)=>{
+//         if(err){
+//             return console.log(err.message);
+//         }
+//         itemsPool.query("select * from users",(res)=>{
+//             return console.log(res);
+//         })
+//     })
 
 //フォームの値を受け取る
 app.use(express.urlencoded({extended:false}));
