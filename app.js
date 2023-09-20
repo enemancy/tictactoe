@@ -14,6 +14,13 @@ const connection = mysql.createConnection({
     password:process.env.MYSQL_PASSWORD,
     database:'tictactoe'
 })
+connection.connect((err)=>{
+    if(err){
+        return console.error('error:' + err.message);
+    }
+    console.log('Connected to the MySQL server.');
+});
+
 
 // pg
 const {Pool} = require('pg');
