@@ -15,6 +15,13 @@ const connection = mysql.createConnection({
     database:'tictactoe'
 })
 
+// pg
+const {Pool} = require('pg');
+const itemsPool = new Pool({
+    connectionString:process.env.PG_LINK,
+    ssl:{rejectUnauthorized:false}
+});
+
 //フォームの値を受け取る
 app.use(express.urlencoded({extended:false}));
 
