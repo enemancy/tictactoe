@@ -4,7 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const PORT = 3000;
-client.on('error',(error)=>console.log(err.message));
+Client.on('error',(error)=>console.log(err.message));
 
 // //mysql
 // const mysql = require('mysql');
