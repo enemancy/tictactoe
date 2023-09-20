@@ -132,12 +132,15 @@ app.post('/selectuser/:id',(req,res)=>{
 });
 
 app.get('/user/adduser',(req,res)=>{
-    connection.query(
-        'select color from colors',
-        (error,results)=>{
-            res.render('adduser.ejs',{colors:results});
-        }
-    )
+    const query = {
+        text:"select color from colors",
+    };
+    itemsPool
+        .query(query)
+        .then((results)=>{
+            res.render('adduser.ejs',{colors:results.rows});
+        })
+        .catch((e)=>console.error(e.stack));
 });
 
 app.post('/adduser',(req,res)=>{
