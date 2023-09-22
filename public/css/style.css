@@ -251,9 +251,6 @@ table tr:last-child td:last-child {
   display: flex;
   justify-content: center;
   background-color: #ff9300;
-  position: absolute;
-  width: 100%;
-  bottom: 0;
   margin-top: 20px;
 }
 .footer p{
