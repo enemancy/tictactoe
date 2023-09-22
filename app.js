@@ -4,7 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const PORT = 3000;
-Client.on('error',(error)=>console.log(err.message));
+// Client.on('error',(error)=>console.log(err.message));
 
 // //mysql
 // const mysql = require('mysql');
@@ -56,7 +56,7 @@ app.get('/game',(req,res)=>{
     res.render('game.ejs');
 });
 
-
+// 先攻後攻実装したいね
 app.post('/game/1',(req,res)=>{
     const query ={
         text:"select * from users where name in ($1)",
@@ -72,36 +72,40 @@ app.post('/game/1',(req,res)=>{
         .catch((e)=>console.error(e.stack));
 });
 
-
 // 解決：先に追加された人が先行になっちゃう
 // 同じ名前だとバグる→バグらなくなったけどバリデーション？したほうがいいかも
 app.post('/game/2',(req,res)=>{
+    console.log(req.body);
     const query1 = {
         text:'select * from users where name in ($1)',
         values:[req.body.player1]
     };
-    let resPlayers;
-    itemsPool
-        .query(query1)
-        .then((results)=>{
-            resPlayers = results.rows;
-        })
-        .catch((e)=>console.error(e.stack));
-    
     const query2 = {
         text:'select * from users where name in ($1)',
         values:[req.body.player2]
     };
+
+    let resPlayers;
+    
     itemsPool
-        .query(query2)
+        .query(query1)
         .then((results)=>{
-            if(resPlayers[0].color == results.rows[0].color){
-                results.rows[0].color = 'pink';
-            }
-            resPlayers.push(results.rows[0]);
-            res.render('game.ejs',{players:resPlayers});
+            resPlayers = results.rows;
+
+            itemsPool
+            .query(query2)
+            .then((results)=>{
+                if(resPlayers[0].color == results.rows[0].color){
+                    results.rows[0].color = 'pink';
+                }
+                resPlayers.push(results.rows[0]);
+                res.render('game.ejs',{players:resPlayers});
+            })
+            .catch((e)=>console.error(e.stack));
+
         })
-        .catch((e)=>console.error(e.stack));
+        .catch((e)=>console.error(e));
+
 });
 
 app.get('/user',(req,res)=>{
