@@ -4,22 +4,6 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const PORT = 3000;
-// Client.on('error',(error)=>console.log(err.message));
-
-// //mysql
-// const mysql = require('mysql');
-// const connection = mysql.createConnection({
-//     host:process.env.MYSQL_HOST,
-//     user:process.env.MYSQL_USER,
-//     password:process.env.MYSQL_PASSWORD,
-//     database:process.env.MYSQL_DATABASE
-// })
-// connection.connect((err)=>{
-//     if(err){
-//         return console.error('MYSQL conncection error:' + err.message);
-//     }
-//     console.log('Connected to the MySQL server.');
-// });
 
 
 // pg
@@ -41,11 +25,6 @@ app.use(express.urlencoded({extended:false}));
 // ミドルウェア
 app.use(express.static('public'));
 
-app.post('/',(req)=>{
-    console.log(req.body.usename);
-    let name = req.body.usename;
-    res.send(name);
-});
 
 // rooting
 app.get('/',(req,res)=>{
@@ -69,7 +48,10 @@ app.post('/game/1',(req,res)=>{
             console.log(results.rows);
             res.render('game.ejs',{players:results.rows});
         })
-        .catch((e)=>console.error(e.stack));
+        .catch((e)=>{
+            console.error(e.stack);
+            res.render('404Page.ejs');
+        });
 });
 
 // 解決：先に追加された人が先行になっちゃう
@@ -101,10 +83,16 @@ app.post('/game/2',(req,res)=>{
                 resPlayers.push(results.rows[0]);
                 res.render('game.ejs',{players:resPlayers});
             })
-            .catch((e)=>console.error(e.stack));
+            .catch((e)=>{
+                console.error(e.stack);
+                res.render('404Page.ejs');
+            });
 
         })
-        .catch((e)=>console.error(e));
+        .catch((e)=>{
+            console.error(e.stack);
+            res.render('404Page.ejs');
+        });
 
 });
 
@@ -118,7 +106,10 @@ app.get('/user',(req,res)=>{
             console.log(res.rows);
             res.render('user.ejs',{users:results.rows});
         })
-        .catch((e)=>console.error(e.stack));
+        .catch((e)=>{
+            console.error(e.stack);
+            res.render('404Page.ejs');
+        });
 });
 
 app.post('/selectuser/:id',(req,res)=>{
@@ -133,7 +124,10 @@ app.post('/selectuser/:id',(req,res)=>{
                 playerCnt:req.params.id
             });
         })
-        .catch((e)=>console.error(e.stack));
+        .catch((e)=>{
+            console.error(e.stack);
+            res.render('404Page.ejs');
+        });
 });
 
 app.get('/user/adduser',(req,res)=>{
@@ -145,7 +139,10 @@ app.get('/user/adduser',(req,res)=>{
         .then((results)=>{
             res.render('adduser.ejs',{colors:results.rows});
         })
-        .catch((e)=>console.error(e.stack));
+        .catch((e)=>{
+            console.error(e.stack);
+            res.render('404Page.ejs');
+        });
 });
 
 app.post('/adduser',(req,res)=>{
@@ -158,7 +155,10 @@ app.post('/adduser',(req,res)=>{
         .then((results)=>{
             res.redirect('/user');
         })
-        .catch((e)=>console.error(e.stack));
+        .catch((e)=>{
+            console.error(e.stack);
+            res.render('404Page.ejs');
+        });
 });
 
 app.post('/deleteuser/:id',(req,res)=>{
@@ -171,7 +171,10 @@ app.post('/deleteuser/:id',(req,res)=>{
         .then((results)=>{
             res.redirect('/user');
         })
-        .catch((e)=>console.error(e.stack));
+        .catch((e)=>{
+            console.error(e.stack);
+            res.render('404Page.ejs');
+        });
 })
 
 // const testQuery = 
@@ -190,6 +193,7 @@ app.post('/deleteuser/:id',(req,res)=>{
 // })
 
 // surver
-app.listen(PORT,()=>{
+app.listen(PORT,(err)=>{
+    if(err){console.err(err.stack);}
     console.log(`loading on port ${PORT}`);
 });
