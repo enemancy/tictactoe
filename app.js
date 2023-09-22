@@ -1,3 +1,4 @@
+// 環境変数
 require('dotenv').config();
 
 // express

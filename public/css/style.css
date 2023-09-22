@@ -4,6 +4,9 @@ body{
   align-items: center;
   text-align:center;
 }
+h1{
+  font-size: 20px;
+}
 
 /* header */
 header {
@@ -244,40 +247,16 @@ table tr:last-child td:last-child {
 }
 
 /* フッター */
-.footer-002 {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  padding: 25px 10px 10px;
-  background-color: #ff9300;
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-}
-
-.footer-002__logo {
-  width: 130px;
-  height: 30px;
-}
-
-.footer-002__list {
+.footer{
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 0 1.5em;
-  list-style-type: none;
-  margin: 0 0 .5em;
-  padding: .5em;
+  background-color: #ff9300;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  margin-top: 20px;
 }
-
-.footer-002__sns-icon {
-  width: 21px;
-  height: 21px;
-}
-
-.footer-002__copyright {
-  margin: 0;
-  color: #ffffffb3;
-  font-weight: 200;
-  font-size: .8em;
+.footer p{
+  color: white;
+  font-weight: bold;
 }
